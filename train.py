@@ -32,6 +32,9 @@ def parse_args():
     p.add_argument("--synthetic", action="store_true", help="Use the offline synthetic dataset")
     p.add_argument("--epochs", type=int, default=None)
     p.add_argument("--batch-size", type=int, default=None)
+    p.add_argument("--backbone", default=None, choices=["resnet18", "resnet50", "resnet101"],
+                    help="Override model.backbone from config (resnet18 is much faster on CPU)")
+    p.add_argument("--image-size", type=int, default=None, help="Override data.image_size from config")
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     p.add_argument("--output", default=None, help="Checkpoint path override")
     return p.parse_args()
@@ -54,6 +57,10 @@ def main():
         cfg["train"]["epochs"] = args.epochs
     if args.batch_size:
         cfg["train"]["batch_size"] = args.batch_size
+    if args.backbone:
+        cfg["model"]["backbone"] = args.backbone
+    if args.image_size:
+        cfg["data"]["image_size"] = args.image_size
 
     torch.manual_seed(cfg["data"]["seed"])
     device = torch.device(args.device)
