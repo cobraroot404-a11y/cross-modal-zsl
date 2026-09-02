@@ -88,6 +88,17 @@ pip install -r requirements-dev.txt
 pytest tests/
 ```
 
+The repo also bundles 16 real CUB photographs (`sample_data/`, ~400KB) so you can run the exact
+same code path on genuine images with zero download:
+
+```bash
+python train.py --data-root sample_data/CUB_sample --epochs 3 --backbone resnet18 --image-size 128
+```
+
+See [`sample_data/README.md`](sample_data/README.md) for what's real (the photos) versus
+placeholder (the attribute vectors) in that bundle — it's for pipeline verification, not
+benchmark numbers.
+
 ## Real training on CUB-200-2011
 
 The project targets [CUB-200-2011](https://data.caltech.edu/records/65de6-vp158) (200 bird

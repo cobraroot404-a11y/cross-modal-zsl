@@ -1,0 +1,2 @@
+1 001.Sample_Laysan_Albatross
+2 002.Sample_Sooty_Albatross
