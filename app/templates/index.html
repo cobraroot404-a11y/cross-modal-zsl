@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cross-Modal Zero-Shot Image Classification</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Cross-Modal Alignment for Zero-Shot Image Classification</h1>
+    <p class="subtitle">Upload a bird photo &mdash; the model classifies it among species it never saw during training, using text-attribute alignment instead of labeled examples.</p>
+  </header>
+
+  <main>
+    {% if error %}
+      <div class="card error">
+        <h2>Model not ready</h2>
+        <pre>{{ error }}</pre>
+      </div>
+    {% else %}
+      <div class="card">
+        <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+          <label class="file-input">
+            <input type="file" name="image" accept="image/*" required>
+            <span>Choose an image&hellip;</span>
+          </label>
+
+          <fieldset>
+            <legend>Candidate classes</legend>
+            <label><input type="radio" name="candidates" value="unseen" checked> Unseen (true zero-shot)</label>
+            <label><input type="radio" name="candidates" value="seen"> Seen (trained classes)</label>
+            <label><input type="radio" name="candidates" value="all"> All classes</label>
+          </fieldset>
+
+          <button type="submit">Classify</button>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if result %}
+      <div class="card result">
+        <div class="images">
+          <figure>
+            <img src="{{ result.input_image }}" alt="Uploaded image">
+            <figcaption>Input</figcaption>
+          </figure>
+          <figure>
+            <img src="{{ result.overlay_image }}" alt="Attention heatmap">
+            <figcaption>Attribute-attention heatmap (top prediction)</figcaption>
+          </figure>
+        </div>
+
+        <h2>Top predictions <span class="muted">({{ result.candidates }} classes)</span></h2>
+        <ol class="predictions">
+          {% for p in result.predictions %}
+          <li>
+            <span class="name">{{ p.name }}</span>
+            <div class="bar"><div class="fill" style="width: {{ p.confidence }}%"></div></div>
+            <span class="confidence">{{ p.confidence }}%</span>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+    {% endif %}
+  </main>
+
+  <footer>
+    <p>Built with a ResNet transfer-learning backbone, attribute-guided cross-attention, and cosine-similarity alignment in a shared visual-semantic embedding space.</p>
+  </footer>
+</body>
+</html>

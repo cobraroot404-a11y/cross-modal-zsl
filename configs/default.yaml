@@ -1,0 +1,32 @@
+# Default configuration for Cross-Modal Alignment Zero-Shot Image Classification
+
+data:
+  root: "data/CUB_200_2011"          # dataset root (images/ + attributes/ subfolders)
+  split_dir: null                     # optional dir with trainvalclasses.txt / testclasses.txt
+  unseen_ratio: 0.25                  # used only if split_dir is not provided (fallback split)
+  image_size: 224
+  num_workers: 4
+  seed: 42
+
+model:
+  backbone: "resnet50"                # resnet50 | resnet18 | resnet101
+  pretrained: true
+  freeze_backbone_stages: 6           # number of resnet children to freeze (0 = fine-tune all)
+  embed_dim: 512                      # shared visual/semantic embedding dimension
+  attribute_hidden_dim: 512
+
+train:
+  epochs: 30
+  batch_size: 32
+  lr: 3.0e-4
+  backbone_lr: 3.0e-5
+  weight_decay: 1.0e-4
+  temperature: 0.1                    # cosine-similarity temperature for classification logits
+  consistency_weight: 0.5             # weight for semantic-consistency loss term
+  label_smoothing: 0.05
+  grad_clip: 5.0
+  checkpoint_dir: "checkpoints"
+  log_every: 20
+
+eval:
+  batch_size: 64

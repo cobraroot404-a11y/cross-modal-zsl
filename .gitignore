@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# data & artifacts
+data/CUB_200_2011/
+data/*.tgz
+data/*.zip
+checkpoints/*.pt
+checkpoints/*.pth
+outputs/*.png
+outputs/*.json
+outputs/*.csv
+runs/
+
+# app uploads
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+
+.DS_Store
+Thumbs.db
+*.log
